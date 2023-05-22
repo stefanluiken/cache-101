@@ -37,23 +37,24 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache<K, V> {
+    private int cacheCapacity;
     private ConcurrentHashMap<K, CacheItem> map;
     private CacheItem first;
     private CacheItem last;
     private int size;
-    private final int CAPACITY;
+
     private int hitCount = 0;
     private int missCount = 0;
     public Cache(int capacity) {
-        CAPACITY = capacity;  //
-        map = new ConcurrentHashMap<>(CAPACITY);
+        cacheCapacity = capacity;
+        map = new ConcurrentHashMap<>(cacheCapacity);
     }
 
     public void put(K key, V value) {
         CacheItem node = new CacheItem(key, value);
 
         if(map.containsKey(key) == false) {
-            if(size() >= CAPACITY) {
+            if(size() >= cacheCapacity) {
                 deleteNode(first);
             }
             addNodeToLast(node);
